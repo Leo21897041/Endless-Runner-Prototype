@@ -1,93 +1,73 @@
-
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.InputSystem;
+
 
 public class PlayerMovement : MonoBehaviour
 {
-    private float horizontalInput, verticalInput;
-    private float currentSteerAngle, currentbreakForce;
-    private bool isBreaking;
-    public Vector3 directionalInput;
-    // Settings
-    [SerializeField] private float motorForce, breakForce, maxSteerAngle;
+    public Rigidbody sphereRB;
 
-    // Wheel Colliders
-    [SerializeField] private WheelCollider frontLeftWheelCollider, frontRightWheelCollider;
-    [SerializeField] private WheelCollider rearLeftWheelCollider, rearRightWheelCollider;
+    private float moveInput;
+    private float turnInput;
 
-    // Wheels
-    [SerializeField] private Transform frontLeftWheelTransform, frontRightWheelTransform;
-    [SerializeField] private Transform rearLeftWheelTransform, rearRightWheelTransform;
+    public float offRoadSpeed;
+    public float normalSpeed;
+    public float forwardSpeed;
+    public float reverseSpeed;
+    public float turnSpeed;
+
+    public GameObject leftPS;
+    public GameObject rightPS;
+    public bool isOffroad;
+
+    private void Start()
+    {
+        forwardSpeed = normalSpeed;
+
+        sphereRB.transform.parent = null;
+    }
+    private void Update()
+    {
+        moveInput = Input.GetAxisRaw("Vertical");
+        turnInput = Input.GetAxisRaw("Horizontal");
+
+        if (isOffroad)
+        {
+            forwardSpeed = offRoadSpeed;
+        }
+        else if(!isOffroad)
+        {
+            forwardSpeed = normalSpeed;
+        }
+        moveInput *= moveInput > 0 ? forwardSpeed : reverseSpeed;
+
+        if (turnInput != 0)
+        {
+            leftPS.SetActive(true);
+            rightPS.SetActive(true);
+        }
+        else
+        {
+            leftPS.SetActive(false);
+            rightPS.SetActive(false);
+        }
+/*        if (moveInput > 0)
+        {
+            moveInput *= forwardSpeed;
+        }
+        else
+        {
+            moveInput *= revSpeed;
+        }*/
+
+        transform.position = sphereRB.transform.position;
+
+        float newRotation = turnInput * turnSpeed * Time.deltaTime * Input.GetAxisRaw("Vertical");
+        transform.Rotate(0, newRotation, 0, Space.World);
+    }
 
     private void FixedUpdate()
     {
-        GetInput();
-        HandleMotor();
-        HandleSteering();
-        UpdateWheels();
+        sphereRB.AddForce(transform.forward * moveInput, ForceMode.Acceleration);
     }
-
-    private void GetInput()
-    {
-        // Steering Input
-        horizontalInput = Input.GetAxis("Horizontal");
-
-        // Acceleration Input
-        verticalInput = Input.GetAxis("Vertical");
-
-        // Breaking Input
-        isBreaking = Input.GetKey(KeyCode.Space);
-    }
-
-    private void HandleMotor()
-    {
-        /*        frontLeftWheelCollider.motorTorque = directionalInput.y * motorForce;
-                frontRightWheelCollider.motorTorque = directionalInput.y * motorForce;*/
-        frontLeftWheelCollider.motorTorque = verticalInput * motorForce;
-        frontRightWheelCollider.motorTorque = verticalInput * motorForce;
-        currentbreakForce = isBreaking ? breakForce : 0f;
-        ApplyBreaking();
-    }
-
-    private void ApplyBreaking()
-    {
-        frontRightWheelCollider.brakeTorque = currentbreakForce;
-        frontLeftWheelCollider.brakeTorque = currentbreakForce;
-        rearLeftWheelCollider.brakeTorque = currentbreakForce;
-        rearRightWheelCollider.brakeTorque = currentbreakForce;
-    }
-
-    private void HandleSteering()
-    {
-        currentSteerAngle = maxSteerAngle * directionalInput.x;
-        frontLeftWheelCollider.steerAngle = currentSteerAngle;
-        frontRightWheelCollider.steerAngle = currentSteerAngle;
-    }
-
-    private void UpdateWheels()
-    {
-        UpdateSingleWheel(frontLeftWheelCollider, frontLeftWheelTransform);
-        UpdateSingleWheel(frontRightWheelCollider, frontRightWheelTransform);
-        UpdateSingleWheel(rearRightWheelCollider, rearRightWheelTransform);
-        UpdateSingleWheel(rearLeftWheelCollider, rearLeftWheelTransform);
-    }
-
-    private void UpdateSingleWheel(WheelCollider wheelCollider, Transform wheelTransform)
-    {
-        Vector3 pos;
-        Quaternion rot;
-        wheelCollider.GetWorldPose(out pos, out rot);
-        wheelTransform.rotation = rot;
-        wheelTransform.position = pos;
-    }
-
-/*    public void OnMove(InputAction.CallbackContext context)
-    {
-        directionalInput = context.ReadValue<Vector2>();
-    }*/
 }
 /*    [Header ("Components")]
     private Rigidbody rb;
