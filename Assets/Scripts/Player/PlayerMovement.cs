@@ -16,7 +16,6 @@ public class PlayerMovement : MonoBehaviour
 
     public GameObject leftPS;
     public GameObject rightPS;
-    public bool isOffroad;
 
     private void Start()
     {
@@ -29,14 +28,6 @@ public class PlayerMovement : MonoBehaviour
         moveInput = Input.GetAxisRaw("Vertical");
         turnInput = Input.GetAxisRaw("Horizontal");
 
-        if (isOffroad)
-        {
-            forwardSpeed = offRoadSpeed;
-        }
-        else if(!isOffroad)
-        {
-            forwardSpeed = normalSpeed;
-        }
         moveInput *= moveInput > 0 ? forwardSpeed : reverseSpeed;
 
         if (turnInput != 0)

@@ -4,7 +4,9 @@ public class PlayerCollisions : MonoBehaviour
 {
     public PlayerMovement playerMovement;
 
+    public Vector3 newPosition;
 
+    public bool isOffroad;
     private void Start()
     {
         playerMovement = GetComponentInParent<PlayerMovement>();
@@ -13,11 +15,20 @@ public class PlayerCollisions : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Offroad"))
         {
-            playerMovement.isOffroad = true;
+            isOffroad = true;
+
+            Respawn();
         }
         if (collision.gameObject.CompareTag("Track"))
         {
-            playerMovement.isOffroad = false;
+            isOffroad = false;
+
+            newPosition = transform.position;
         }
+    }
+
+    private void Respawn()
+    {
+        transform.position = newPosition;
     }
 }

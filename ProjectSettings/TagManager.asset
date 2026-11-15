@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Track
   - Offroad
+  - Box
   layers:
   - Default
   - TransparentFX
