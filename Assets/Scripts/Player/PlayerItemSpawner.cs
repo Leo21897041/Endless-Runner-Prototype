@@ -22,7 +22,7 @@ public class PlayerItemSpawner : MonoBehaviour
                 spawnPosition.y = 1f;
                 Instantiate(itemsList[0], spawnPosition, Quaternion.identity);
 
-                canSpawnItem = false;
+                //canSpawnItem = false;
             }
             if (Keyboard.current.leftShiftKey.wasPressedThisFrame)
             {
@@ -31,7 +31,7 @@ public class PlayerItemSpawner : MonoBehaviour
                 {
                     rb.AddForce(shootForce * bulletSpawnPoint.forward * Time.fixedDeltaTime, ForceMode.Impulse);
                 }
-                canSpawnItem = false;
+                //canSpawnItem = false;
             }
         }
     }
