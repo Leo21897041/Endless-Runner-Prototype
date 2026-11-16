@@ -7,6 +7,7 @@ TagManager:
   - Track
   - Offroad
   - Box
+  - Enemy
   layers:
   - Default
   - TransparentFX

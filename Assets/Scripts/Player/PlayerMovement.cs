@@ -1,14 +1,13 @@
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 
 public class PlayerMovement : MonoBehaviour
 {
     public Rigidbody sphereRB;
-
-    private float moveInput;
-    private float turnInput;
-
-    public float offRoadSpeed;
+    public float moveInput;
+    public float turnInput;
+    public float currentSpeed;
     public float normalSpeed;
     public float forwardSpeed;
     public float reverseSpeed;
@@ -16,6 +15,7 @@ public class PlayerMovement : MonoBehaviour
 
     public GameObject leftPS;
     public GameObject rightPS;
+    public bool isDriving;    
 
     private void Start()
     {
@@ -25,10 +25,10 @@ public class PlayerMovement : MonoBehaviour
     }
     private void Update()
     {
-        moveInput = Input.GetAxisRaw("Vertical");
-        turnInput = Input.GetAxisRaw("Horizontal");
+        /*        moveInput = Input.GetAxisRaw("Vertical");
+                turnInput = Input.GetAxisRaw("Horizontal");*/
 
-        moveInput *= moveInput > 0 ? forwardSpeed : reverseSpeed;
+        currentSpeed = moveInput * (moveInput > 0 ? forwardSpeed : reverseSpeed);
 
         if (turnInput != 0)
         {
@@ -40,24 +40,86 @@ public class PlayerMovement : MonoBehaviour
             leftPS.SetActive(false);
             rightPS.SetActive(false);
         }
-/*        if (moveInput > 0)
-        {
-            moveInput *= forwardSpeed;
-        }
-        else
-        {
-            moveInput *= revSpeed;
-        }*/
+        /*        if (moveInput > 0)
+                {
+                    moveInput *= forwardSpeed;
+                }
+                else
+                {
+                    moveInput *= revSpeed;
+                }*/
 
         transform.position = sphereRB.transform.position;
 
-        float newRotation = turnInput * turnSpeed * Time.deltaTime * Input.GetAxisRaw("Vertical");
-        transform.Rotate(0, newRotation, 0, Space.World);
+        /*        float newRotation = turnInput * turnSpeed * Time.deltaTime * Input.GetAxisRaw("Vertical");
+                    transform.Rotate(0, newRotation, 0, Space.World);*/
+        if (Mathf.Abs(moveInput) > 0.01f)
+        {
+            float direction = moveInput > 0 ? 1f : -1f;
+            float newRotation = turnInput * turnSpeed * Time.deltaTime * direction;
+            transform.Rotate(0, newRotation, 0, Space.World);
+        }
     }
 
     private void FixedUpdate()
     {
-        sphereRB.AddForce(transform.forward * moveInput, ForceMode.Acceleration);
+        sphereRB.AddForce(transform.forward * currentSpeed, ForceMode.Acceleration);
+    }
+
+    public void OnDrive(InputAction.CallbackContext context)
+    {
+        print("Driving");
+        if (context.performed == true)
+        {
+            isDriving = true;
+
+            moveInput = 1f;
+        }
+        else if (context.canceled == true)
+        {
+            isDriving = false;
+
+            moveInput = 0;
+        }
+    }
+    public void OnReverse(InputAction.CallbackContext context)
+    {
+        if (context.performed == true)
+        {
+            print("Reversing");
+            isDriving = true;
+
+            moveInput = -1f;
+        }
+        else if (context.canceled == true)
+        {
+            isDriving = false;
+
+            moveInput = 0;
+        }
+    }
+    public void OnTurn(InputAction.CallbackContext context)
+    {
+        turnInput = context.ReadValue<float>();
+        
+        if (turnInput != 0f)
+        {
+            print("Turning");
+        }
+    }
+    public void OnItems(InputAction.CallbackContext context)
+    {
+        if (context.performed)
+        {
+            GetComponent<PlayerItemSpawner>().PlaceItem();
+        }
+    }
+    public void OnShoot(InputAction.CallbackContext context)
+    {
+        if (context.performed)
+        {
+            GetComponent<PlayerItemSpawner>().Shoot();
+        }
     }
 }
 /*    [Header ("Components")]

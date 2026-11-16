@@ -10,29 +10,29 @@ public class PlayerItemSpawner : MonoBehaviour
     public GameObject bulletPrefab;
     public Transform bulletSpawnPoint;
     public float shootForce;
-
-    private void Update()
+    
+    public void PlaceItem()
     {
         if (canSpawnItem)
         {
-            if (Keyboard.current.spaceKey.wasPressedThisFrame)
-            {
-                Vector3 spawnDistance = new Vector3(0, 0, -2);
-                Vector3 spawnPosition = transform.TransformPoint(spawnDistance);
-                spawnPosition.y = 1f;
-                Instantiate(itemsList[0], spawnPosition, Quaternion.identity);
+            Vector3 spawnDistance = new Vector3(0, 0, -2);
+            Vector3 spawnPosition = transform.TransformPoint(spawnDistance);
+            spawnPosition.y = 1f;
+            Instantiate(itemsList[0], spawnPosition, Quaternion.identity);
 
-                //canSpawnItem = false;
-            }
-            if (Keyboard.current.leftShiftKey.wasPressedThisFrame)
+            //canSpawnItem = false;
+        }
+    }
+    public void Shoot()
+    {
+        if (canSpawnItem)
+        {
+            GameObject newBullet = Instantiate(bulletPrefab, bulletSpawnPoint.position, transform.rotation);
+            if (newBullet.TryGetComponent(out Rigidbody rb))
             {
-                GameObject newBullet = Instantiate(bulletPrefab, bulletSpawnPoint.position, transform.rotation);
-                if (newBullet.TryGetComponent(out Rigidbody rb))
-                {
-                    rb.AddForce(shootForce * bulletSpawnPoint.forward * Time.fixedDeltaTime, ForceMode.Impulse);
-                }
-                //canSpawnItem = false;
+                rb.AddForce(shootForce * bulletSpawnPoint.forward * Time.fixedDeltaTime, ForceMode.Impulse);
             }
+            //canSpawnItem = false;
         }
     }
 }
