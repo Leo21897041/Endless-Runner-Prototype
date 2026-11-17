@@ -135,7 +135,7 @@ SphereCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
@@ -156,3 +156,4 @@ MonoBehaviour:
   expForce: 2000
   radius: 5
   delay: 3
+  explosionParticles: {fileID: 6074797405116802845, guid: 186ee168a30da8c458af4a9ef015b5ec, type: 3}

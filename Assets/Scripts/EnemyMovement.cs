@@ -1,5 +1,6 @@
-using UnityEngine;
 using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.Splines;
 
 public class EnemyMovement : MonoBehaviour
 {
@@ -38,7 +39,6 @@ public class EnemyMovement : MonoBehaviour
             if (transform.position == targetPosition)
             {
                 waypointIndex++;
-                print("reached");
             }
         }
         else
@@ -53,10 +53,22 @@ public class EnemyMovement : MonoBehaviour
         if (waypointIndex + 1 >= waypointsList.Length)
         {
             transform.LookAt(waypointsList[0]);
+
+            print(waypointsList[0]);
         }
         else
         {
-            transform.LookAt(waypointsList[waypointIndex + 1]);            
+            transform.LookAt(waypointsList[waypointIndex + 1]);
+
+            print(waypointsList[waypointIndex + 1]);
+        }
+    }
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.CompareTag("Player"))
+        {
+            print("recieved");
+            other.gameObject.GetComponent<PlayerManager>().isAlive = false;
         }
     }
 }

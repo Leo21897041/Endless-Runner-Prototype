@@ -5,9 +5,11 @@ public class Explosion : MonoBehaviour
     public float expForce;
     public float radius;
     public float delay;
-
-    private void OnCollisionEnter(Collision other)
+    public GameObject explosionParticles;
+    private void OnTriggerEnter(Collider other)
     {
+        Instantiate(explosionParticles, transform.position, Quaternion.identity);
+        
         Knockback();
         Destroy(gameObject);
     }
