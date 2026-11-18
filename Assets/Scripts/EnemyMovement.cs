@@ -63,12 +63,4 @@ public class EnemyMovement : MonoBehaviour
             print(waypointsList[waypointIndex + 1]);
         }
     }
-    private void OnTriggerEnter(Collider other)
-    {
-        if (other.gameObject.CompareTag("Player"))
-        {
-            print("recieved");
-            other.gameObject.GetComponent<PlayerManager>().isAlive = false;
-        }
-    }
 }

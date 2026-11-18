@@ -15,7 +15,6 @@ public class PlayerInputManager : MonoBehaviour
     public Color[] playerColors = new Color[] { Color.red, Color.blue, Color.green, Color.yellow };
     public Color[] panelColors = new Color[] { new Color(1f, 0f, 0f, 0.25f), new Color(1f, 0f, 0f, 0.25f), new Color(0f, 1f, 0f, 0.25f), new Color(0f, 1f, 1f, 0.25f) };
     public List<Vector3> panelPositions = new List<Vector3>();
-
     public HashSet<InputDevice> joinedDevices = new HashSet<InputDevice>();
 
     void Update()
@@ -48,7 +47,6 @@ public class PlayerInputManager : MonoBehaviour
 
                 ApplyColor(newPlayer.gameObject, playerIndex);
             }
-
 
             if (joinedDevices.Count >= maxPlayers) { break; }
         }

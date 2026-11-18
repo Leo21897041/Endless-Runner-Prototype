@@ -7,6 +7,9 @@ public class PlayerMovement : MonoBehaviour
     public Rigidbody sphereRB;
     public float moveInput;
     public float turnInput;
+    public Vector2 directionalInput;
+    public Vector3 movement;
+    public float moveSpeed;
     public float currentSpeed;
     public float normalSpeed;
     public float forwardSpeed;
@@ -15,55 +18,69 @@ public class PlayerMovement : MonoBehaviour
 
     public GameObject leftPS;
     public GameObject rightPS;
-    public bool isDriving;    
+    public bool isDriving;
+
+    public bool isAlive;
 
     private void Start()
     {
         forwardSpeed = normalSpeed;
 
         sphereRB.transform.parent = null;
+
+        isAlive = true;
     }
     private void Update()
     {
-        /*        moveInput = Input.GetAxisRaw("Vertical");
-                turnInput = Input.GetAxisRaw("Horizontal");*/
-
-        currentSpeed = moveInput * (moveInput > 0 ? forwardSpeed : reverseSpeed);
-
-        if (turnInput != 0)
+        if (isAlive)
         {
-            leftPS.SetActive(true);
-            rightPS.SetActive(true);
+            /*        moveInput = Input.GetAxisRaw("Vertical");
+                    turnInput = Input.GetAxisRaw("Horizontal");*/
+
+            currentSpeed = moveInput * (moveInput > 0 ? forwardSpeed : reverseSpeed);
+
+            if (turnInput != 0)
+            {
+                leftPS.SetActive(true);
+                rightPS.SetActive(true);
+            }
+            else
+            {
+                leftPS.SetActive(false);
+                rightPS.SetActive(false);
+            }
+            /*        if (moveInput > 0)
+                    {
+                        moveInput *= forwardSpeed;
+                    }
+                    else
+                    {
+                        moveInput *= revSpeed;
+                    }*/
+
+            transform.position = sphereRB.transform.position;
+
+            /*        float newRotation = turnInput * turnSpeed * Time.deltaTime * Input.GetAxisRaw("Vertical");
+                        transform.Rotate(0, newRotation, 0, Space.World);*/
+            if (Mathf.Abs(moveInput) > 0.01f)
+            {
+                float direction = moveInput > 0 ? 1f : -1f;
+                float newRotation = turnInput * turnSpeed * Time.deltaTime * direction;
+                transform.Rotate(0, newRotation, 0, Space.World);
+            }
         }
         else
         {
-            leftPS.SetActive(false);
-            rightPS.SetActive(false);
-        }
-        /*        if (moveInput > 0)
-                {
-                    moveInput *= forwardSpeed;
-                }
-                else
-                {
-                    moveInput *= revSpeed;
-                }*/
-
-        transform.position = sphereRB.transform.position;
-
-        /*        float newRotation = turnInput * turnSpeed * Time.deltaTime * Input.GetAxisRaw("Vertical");
-                    transform.Rotate(0, newRotation, 0, Space.World);*/
-        if (Mathf.Abs(moveInput) > 0.01f)
-        {
-            float direction = moveInput > 0 ? 1f : -1f;
-            float newRotation = turnInput * turnSpeed * Time.deltaTime * direction;
-            transform.Rotate(0, newRotation, 0, Space.World);
+            transform.position += new Vector3(directionalInput.x * moveSpeed * Time.deltaTime, 0f, directionalInput.y * moveSpeed * Time.deltaTime);
         }
     }
 
     private void FixedUpdate()
     {
-        sphereRB.AddForce(transform.forward * currentSpeed, ForceMode.Acceleration);
+        if (isAlive)
+        {
+            sphereRB.AddForce(transform.forward * currentSpeed, ForceMode.Acceleration);
+        }
     }
 
     public void OnDrive(InputAction.CallbackContext context)
@@ -100,11 +117,21 @@ public class PlayerMovement : MonoBehaviour
     }
     public void OnTurn(InputAction.CallbackContext context)
     {
-        turnInput = context.ReadValue<float>();
-        
-        if (turnInput != 0f)
+        if (isAlive)
         {
-            print("Turning");
+            turnInput = context.ReadValue<float>();
+        /*    if (turnInput != 0f)
+            {
+                print("Turning");
+            }*/
+        }
+        
+    }
+    public void OnMove(InputAction.CallbackContext context)
+    {
+        if (!isAlive)
+        {
+            directionalInput = context.ReadValue<Vector2>();
         }
     }
     public void OnItems(InputAction.CallbackContext context)

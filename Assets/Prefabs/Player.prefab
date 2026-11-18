@@ -231,6 +231,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 7611267179879937285}
   - {fileID: 6425137867788695361}
   m_Father: {fileID: 1570115668023779018}
   m_LocalEulerAnglesHint: {x: 0, y: 90, z: 0}
@@ -340,7 +341,7 @@ GameObject:
   - component: {fileID: 4633562463592462619}
   m_Layer: 0
   m_Name: Motor Sphere
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -477,7 +478,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8f3081b194aee164cb159b2e75455adf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerCollisions
-  playerMovement: {fileID: 0}
+  rb: {fileID: 0}
+  sc: {fileID: 0}
+  meshRenderer: {fileID: 0}
+  playerManager: {fileID: 6302661545979732467}
   newPosition: {x: 0, y: 0, z: 0}
   isOffroad: 0
 --- !u!1 &7308207395009167389
@@ -506,12 +510,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7308207395009167389}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: 0.7071068, z: -0, w: 0.7071068}
-  m_LocalPosition: {x: 0, y: 0.122999996, z: 0}
-  m_LocalScale: {x: 2.4999998, y: 0.5, z: 1.2499999}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0.373, z: 0}
+  m_LocalScale: {x: 2.4999995, y: 0.5, z: 1.2499998}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 1570115668023779018}
+  m_Father: {fileID: 5134765616785225741}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &4123958361569637909
 MeshFilter:
@@ -693,7 +697,6 @@ Transform:
   m_LocalScale: {x: 0.4, y: 0.4, z: 0.4}
   m_ConstrainProportionsScale: 1
   m_Children:
-  - {fileID: 7611267179879937285}
   - {fileID: 5134765616785225741}
   - {fileID: 1089921712532943522}
   - {fileID: 2810867091041792636}
@@ -847,6 +850,22 @@ MonoBehaviour:
         m_CallState: 2
     m_ActionId: 33f4b246-8d4b-4189-acdf-15953dab5b51
     m_ActionName: 'Player/Shoot[/SwitchProControllerHID/buttonEast,/XInputControllerWindows/buttonEast]'
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 9179261317455821792}
+        m_TargetAssemblyTypeName: PlayerMovement, Assembly-CSharp
+        m_MethodName: OnMove
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: 58955a0a-7a0c-4650-bea7-ea83e4572602
+    m_ActionName: 'Player/Move[/SwitchProControllerHID/leftStick]'
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: Controller
   m_DefaultActionMap: Player
@@ -867,6 +886,9 @@ MonoBehaviour:
   sphereRB: {fileID: 8541235369591933144}
   moveInput: 0
   turnInput: 0
+  directionalInput: {x: 0, y: 0}
+  movement: {x: 0, y: 0, z: 0}
+  moveSpeed: 5
   currentSpeed: 0
   normalSpeed: 50
   forwardSpeed: 0
@@ -875,6 +897,7 @@ MonoBehaviour:
   leftPS: {fileID: 4575866515318352289}
   rightPS: {fileID: 1703104916274604415}
   isDriving: 0
+  isAlive: 0
 --- !u!114 &326277288785662163
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -894,6 +917,12 @@ MonoBehaviour:
   bulletPrefab: {fileID: 5324134859822773173, guid: f0bd70f659624d840838ff9b00631282, type: 3}
   bulletSpawnPoint: {fileID: 1036707080142039778}
   shootForce: 1000
+  isAlive: 0
+  playerColors:
+  - {r: 1, g: 0, b: 0, a: 1}
+  - {r: 0, g: 0, b: 1, a: 1}
+  - {r: 0, g: 1, b: 0, a: 1}
+  - {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
 --- !u!114 &6302661545979732467
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -906,6 +935,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0402fa2173922fb42be013e059b333f3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerManager
+  carMesh: {fileID: 3866407472359437929}
+  deadObj: {fileID: 8066450951156196374}
+  playerMovement: {fileID: 9179261317455821792}
+  playerItemSpawner: {fileID: 0}
+  deadPlayer: {fileID: 6758807616240068581, guid: ab21ee843650417408e8df3ea88894db, type: 3}
   score: 0
   isAlive: 1
   gameStart: 0
