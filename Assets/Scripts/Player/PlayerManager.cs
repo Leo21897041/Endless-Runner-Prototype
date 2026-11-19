@@ -15,7 +15,7 @@ public class PlayerManager : MonoBehaviour
     private void Start()
     {
         isAlive = true;
-        gameStart = false;
+        gameStart = true;
 
         playerItemSpawner = GetComponent<PlayerItemSpawner>();
         playerMovement = GetComponent<PlayerMovement>();

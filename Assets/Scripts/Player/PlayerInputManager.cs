@@ -12,6 +12,7 @@ public class PlayerInputManager : MonoBehaviour
     public GameObject canvas;
     public Transform[] spawnPoints;
     public int maxPlayers;
+    public GameObject enemyObj;
     public Color[] playerColors = new Color[] { Color.red, Color.blue, Color.green, Color.yellow };
     public Color[] panelColors = new Color[] { new Color(1f, 0f, 0f, 0.25f), new Color(1f, 0f, 0f, 0.25f), new Color(0f, 1f, 0f, 0.25f), new Color(0f, 1f, 1f, 0.25f) };
     public List<Vector3> panelPositions = new List<Vector3>();
@@ -25,9 +26,10 @@ public class PlayerInputManager : MonoBehaviour
         {
             if (joinedDevices.Contains(gamePad)) continue;
 
-            if (gamePad.aButton.wasPressedThisFrame)
+            if (gamePad.buttonSouth.wasPressedThisFrame)
             {
                 int playerIndex = joinedDevices.Count;
+                enemyObj.SetActive(true);
 
                 GameObject playerPanel = Instantiate(playerPanelPrefab, canvas.transform);
                 RectTransform rectTransform = playerPanel.GetComponent<RectTransform>();
@@ -41,14 +43,45 @@ public class PlayerInputManager : MonoBehaviour
                     controlScheme: "Gamepad",
                     pairWithDevice: gamePad);
 
+                newPlayer.GetComponent<PlayerMovement>().isKeyboard = false; 
                 playerPanel.GetComponent<ScorekeeperManager>().playerManager = newPlayer.gameObject.GetComponent<PlayerManager>();
-
+                
                 joinedDevices.Add(gamePad);
 
                 ApplyColor(newPlayer.gameObject, playerIndex);
             }
 
             if (joinedDevices.Count >= maxPlayers) { break; }
+        }
+
+        if (Keyboard.current.spaceKey.wasPressedThisFrame)
+        {
+            if (joinedDevices.Contains(Keyboard.current)) return;
+
+            enemyObj.SetActive(true);
+
+            int playerIndex = joinedDevices.Count;
+
+            GameObject playerPanel = Instantiate(playerPanelPrefab, canvas.transform);
+            RectTransform rectTransform = playerPanel.GetComponent<RectTransform>();
+            rectTransform.anchoredPosition = panelPositions[playerIndex];
+
+            playerPanel.GetComponentInChildren<TextMeshProUGUI>().text = "Player " + (playerIndex + 1);
+            playerPanel.GetComponent<Image>().color = panelColors[playerIndex];
+
+            PlayerInput newPlayer = PlayerInput.Instantiate(playerPrefab,
+                playerIndex: playerIndex,
+                controlScheme: "Keyboard&Mouse",
+                pairWithDevice: Keyboard.current);
+
+            newPlayer.GetComponent<PlayerMovement>().isKeyboard = true;
+            playerPanel.GetComponent<ScorekeeperManager>().playerManager = newPlayer.gameObject.GetComponent<PlayerManager>();
+
+            joinedDevices.Add(Keyboard.current);
+
+            ApplyColor(newPlayer.gameObject, playerIndex);
+
+            //if (joinedDevices.Count >= maxPlayers) { break; }
         }
     }
     private void ApplyColor(GameObject obj, int index)

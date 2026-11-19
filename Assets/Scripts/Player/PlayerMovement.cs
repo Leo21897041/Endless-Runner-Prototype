@@ -19,6 +19,7 @@ public class PlayerMovement : MonoBehaviour
     public GameObject leftPS;
     public GameObject rightPS;
     public bool isDriving;
+    public bool isKeyboard;
 
     public bool isAlive;
 
@@ -34,8 +35,12 @@ public class PlayerMovement : MonoBehaviour
     {
         if (isAlive)
         {
-            /*        moveInput = Input.GetAxisRaw("Vertical");
-                    turnInput = Input.GetAxisRaw("Horizontal");*/
+            if (isKeyboard)
+            {
+                moveInput = Input.GetAxisRaw("Vertical");
+                turnInput = Input.GetAxisRaw("Horizontal");
+            }
+
 
             currentSpeed = moveInput * (moveInput > 0 ? forwardSpeed : reverseSpeed);
 

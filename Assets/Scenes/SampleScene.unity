@@ -9625,6 +9625,7 @@ MonoBehaviour:
   - {fileID: 1531233999}
   - {fileID: 1431251422}
   maxPlayers: 4
+  enemyObj: {fileID: 2069590556}
   playerColors:
   - {r: 1, g: 0, b: 0, a: 1}
   - {r: 0, g: 0, b: 1, a: 1}
@@ -10084,7 +10085,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &2069590558
 Transform:
   m_ObjectHideFlags: 0
